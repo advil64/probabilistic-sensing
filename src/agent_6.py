@@ -14,7 +14,7 @@ class Agent_6:
     # Initialize all cell info in belief state
     for i in range(self.dim):
         for j in range(self.dim):
-            prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), manhattan((0,0), (self.dim-1, self.dim-1)), (i,j))
+            prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), manhattan((i,j), (self.dim-1, self.dim-1)), (i,j))
             self.belief_state.enqueue(prob_node)
             self.cells[(i,j)] = prob_node
 
@@ -26,21 +26,29 @@ class Agent_6:
       if complete_grid.gridworld[curr[0]][curr[1]] == 1:
         # update our knowledge of blocked nodes
         self.discovered_grid.update_grid_obstacle(curr, 1)
+        # update the belief state after learning about this blocked cell
+        self.update_belief_block(curr)
         return node.parent_block, explored
       # Update discovered grid with the terrain type
       self.discovered_grid.update_grid_obstacle(curr, complete_grid.gridworld[curr[0]][curr[1]])
       explored += 1
     return path[-1], explored
 
+  # Update probabilities of all cells after learning about the blocked cell
   def update_belief_block(self, block_coord):
     for prob_node in self.belief_state:
       if not prob_node[3].coord == block_coord:
+        # Update probabilities of all cells except the blocked cell
         prob_node[3].target_probability = prob_node[3].target_probability / (1 - self.cells[block_coord].target_probability)
         prob_node[3].priority_probability = prob_node[3].target_probability
+        # Update the priority of this cell in the priority queue
         prob_node[0] = prob_node[3].priority_probability
       else:
+        # Update probabilities of the blocked cell
         prob_node[3].target_probability = 0
         prob_node[3].priority_probability = 0
+        # Update the priority of this cell in the priority queue
         prob_node[0] = 0
 
+    # Heapify the queue so the cell with max probability is next in queue
     heapq.heapify(self.belief_state.queue)
