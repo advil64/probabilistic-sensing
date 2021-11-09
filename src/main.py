@@ -21,7 +21,7 @@ def solver(dim, prob, complete_grid=None):
   # create a start and end position randomly
   start = (randint(0, dim-1), randint(0, dim-1))
   target = (randint(0, dim-1), randint(0, dim-1))
-  guess = (randint(0, dim-1), randint(0, dim-1))
+  guess = start
   # start = (4,4)
   # target = (2,4)
   # guess = (0,1)
@@ -116,7 +116,7 @@ def solver(dim, prob, complete_grid=None):
           total_cells_processed += cells_processed
     
     completion_time = time() - starting_time
-    data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
+    data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "actions": total_actions, "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
     
     # print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
     # print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
@@ -139,7 +139,7 @@ def verify_solvability(dim, start, target, complete_grid):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument(
-      "-d", "--dimension", type=int, default=10, help="dimension of gridworld"
+      "-d", "--dimension", type=int, default=50, help="dimension of gridworld"
     )
     p.add_argument(
       "-p",
