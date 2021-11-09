@@ -13,10 +13,10 @@ class Agent_6:
     self.belief_state = Probability_Queue()
     # Initialize all cell info in belief state
     for i in range(self.dim):
-        for j in range(self.dim):
-            prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), manhattan((i,j), (self.dim-1, self.dim-1)), (i,j))
-            self.belief_state.enqueue(prob_node)
-            self.cells[(i,j)] = prob_node
+      for j in range(self.dim):
+        prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), manhattan((i,j), (self.dim-1, self.dim-1)), (i,j))
+        self.belief_state.enqueue(prob_node)
+        self.cells[(i,j)] = prob_node
 
   def execute_path(self, path, complete_grid):
     explored = 0

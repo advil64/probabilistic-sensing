@@ -1,6 +1,5 @@
 from random import choices, randint, random
 
-
 class Gridworld:
 
     # NOTE: 1 -> blocked, 2 -> flat, 3 -> hilly, 4 -> forest
