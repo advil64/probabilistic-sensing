@@ -23,6 +23,7 @@ class Agent_6:
     actions = 0
     for node in path:
       curr = node.curr_block
+
       # check if path is blocked
       if complete_grid.gridworld[curr[0]][curr[1]] == 1:
         # update our knowledge of blocked nodes
@@ -30,12 +31,14 @@ class Agent_6:
         # update the belief state after learning about this blocked cell
         self.update_belief_block(curr)
         return node.parent_block, actions, False
+
       # Update discovered grid with the terrain type
       self.discovered_grid.update_grid_obstacle(curr, complete_grid.gridworld[curr[0]][curr[1]])
       # Update cell's false negative rate after observing its terrain type
       self.update_false_negative_rate(curr)
       # Increment number of actions taken because of movement
       actions += 1
+      
       # Check if we reached target cell
       if curr == guess:
         # Increment number of actions taken because of examination

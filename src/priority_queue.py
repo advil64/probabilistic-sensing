@@ -17,6 +17,7 @@ class Priority_Queue:
 
         # check if the node exists in the queue
         if node.curr_block in self.fringe_set:
+            # if the node exists in the queue check if its distance can be reduced
             if node.distance < self.fringe_set[node.curr_block]:
                 self.remove_fringe_node(node.curr_block)
             else:
