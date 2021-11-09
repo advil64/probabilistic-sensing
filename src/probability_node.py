@@ -5,9 +5,8 @@ class Probability_Node:
     # target_probability: probabilty of cell containing target
     # distance: Distance from cell to target
     # coord: The coordinates of this cell
-    def __init__(self, priority_probability, target_probability, distance, coord):
+    def __init__(self, priority_probability, target_probability, coord):
         self.priority_probability = priority_probability
         self.target_probability = target_probability
-        self.distance = distance
         self.coord = coord
         self.false_negative_rate = 1
