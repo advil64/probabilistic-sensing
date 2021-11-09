@@ -93,10 +93,28 @@ def solver(dim, prob, complete_grid=None):
             dim,
             manhattan,
         )
+        # If there is no path to the guess, treat it as blocked and keep targeting the next cell with the highest probability
+        while not new_path:
+          # Treat guess as blocked and update beliefs
+          agent_object.update_belief_block(guess)
+          # Make new guess using the cell with highest probability
+          guess = agent_object.belief_state.queue[0][3].coord
+          # Find a path to this new guess cell
+          new_path, cells_processed = path_planner(
+            start,
+            last_unblock_node,
+            guess,
+            agent_object.discovered_grid,
+            dim,
+            manhattan
+          )
         total_cells_processed += cells_processed
     
     completion_time = time() - starting_time
     print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
+    print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
+    print("Agent %s Took %s actions" % (agent_counter, total_actions))
+    print("Target found: " + str(target) + " with type " + str(complete_grid.gridworld[target[0]][target[1]]))
 
 
 def verify_solvability(dim, start, target, complete_grid):
@@ -112,7 +130,7 @@ def verify_solvability(dim, start, target, complete_grid):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument(
-      "-d", "--dimension", type=int, default=10, help="dimension of gridworld"
+      "-d", "--dimension", type=int, default=50, help="dimension of gridworld"
     )
     p.add_argument(
       "-p",
