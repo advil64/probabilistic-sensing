@@ -15,7 +15,7 @@ class Agent_6:
     # Initialize all cell info in belief state
     for i in range(self.dim):
       for j in range(self.dim):
-        prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), manhattan((i,j), (self.dim-1, self.dim-1)), (i,j))
+        prob_node = Probability_Node(1/(self.dim**2), 1/(self.dim**2), (i,j))
         self.belief_state.enqueue(prob_node)
         self.cells[(i,j)] = prob_node
 
@@ -28,7 +28,7 @@ class Agent_6:
         # update our knowledge of blocked nodes
         self.discovered_grid.update_grid_obstacle(curr, 1)
         # update the belief state after learning about this blocked cell
-        self.update_belief_block(curr)
+        self.update_belief_block(curr, node.parent_block.curr_block)
         return node.parent_block, actions, False
       # Update discovered grid with the terrain type
       self.discovered_grid.update_grid_obstacle(curr, complete_grid.gridworld[curr[0]][curr[1]])
@@ -70,7 +70,7 @@ class Agent_6:
       return False
 
   # Update probabilities of all cells after learning about the blocked cell
-  def update_belief_block(self, block_coord):
+  def update_belief_block(self, block_coord, last_coord):
     # Probabilty that the blocked cell contained the target
     block_probability = self.cells[block_coord].target_probability
     # Update the beliefs of each cell
@@ -79,14 +79,14 @@ class Agent_6:
         # Update probabilities of all cells except the blocked cell
         prob_node[3].target_probability = prob_node[3].target_probability / (1 - block_probability)
         prob_node[3].priority_probability = prob_node[3].target_probability
-        # Update the priority of this cell in the priority queue
-        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, prob_node[1], prob_node[2], prob_node[3])
+        # Update the priority and distance of this cell in the priority queue
+        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, manhattan(last_coord, prob_node[3].coord), prob_node[2], prob_node[3])
       else:
         # Update probabilities of the blocked cell
         prob_node[3].target_probability = 0
         prob_node[3].priority_probability = 0
-        # Update the priority of this cell in the priority queue
-        self.belief_state.queue[index] = (0, prob_node[1], prob_node[2], prob_node[3])
+        # Update the priority and distance of this cell in the priority queue
+        self.belief_state.queue[index] = (0, manhattan(last_coord, prob_node[3].coord), prob_node[2], prob_node[3])
 
     # Heapify the queue so the cell with max probability is next in queue
     heapq.heapify(self.belief_state.queue)
@@ -104,14 +104,14 @@ class Agent_6:
         # Update probabilities of all cells except the examined cell
         prob_node[3].target_probability = prob_node[3].target_probability / (examine_probability * examine_false_negative_rate + (1 - examine_probability))
         prob_node[3].priority_probability = prob_node[3].target_probability
-        # Update the priority of this cell in the priority queue
-        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, prob_node[1], prob_node[2], prob_node[3])
+        # Update the priority and distance of this cell in the priority queue
+        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, manhattan(coord, prob_node[3].coord), prob_node[2], prob_node[3])
       else:
         # Update probabilities of the examined cell
         prob_node[3].target_probability = (examine_probability * examine_false_negative_rate) / (examine_probability * examine_false_negative_rate + (1 - examine_probability))
         prob_node[3].priority_probability = prob_node[3].target_probability
-        # Update the priority of this cell in the priority queue
-        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, prob_node[1], prob_node[2], prob_node[3])
+        # Update the priority and distance of this cell in the priority queue
+        self.belief_state.queue[index] = (prob_node[3].priority_probability * -1, manhattan(coord, prob_node[3].coord), prob_node[2], prob_node[3])
 
     # Heapify the queue so the cell with max probability is next in queue
     heapq.heapify(self.belief_state.queue)

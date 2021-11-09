@@ -93,12 +93,14 @@ def solver(dim, prob, complete_grid=None):
             dim,
             manhattan,
         )
+        total_cells_processed += cells_processed
         # If there is no path to the guess, treat it as blocked and keep targeting the next cell with the highest probability
         while not new_path:
           # Treat guess as blocked and update beliefs
-          agent_object.update_belief_block(guess)
+          agent_object.update_belief_block(guess, start)
           # Make new guess using the cell with highest probability
           guess = agent_object.belief_state.queue[0][3].coord
+          retries += 1
           # Find a path to this new guess cell
           new_path, cells_processed = path_planner(
             start,
@@ -108,11 +110,12 @@ def solver(dim, prob, complete_grid=None):
             dim,
             manhattan
           )
-        total_cells_processed += cells_processed
+          total_cells_processed += cells_processed
     
     completion_time = time() - starting_time
     print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
     print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
+    print("Agent %s performed A* %s times" % (agent_counter, retries))
     print("Agent %s Took %s actions" % (agent_counter, total_actions))
     print("Target found: " + str(target) + " with type " + str(complete_grid.gridworld[target[0]][target[1]]))
 
