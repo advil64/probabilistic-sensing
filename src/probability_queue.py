@@ -15,7 +15,7 @@ class Probability_Queue:
     # adds a fringe node to the queue
     def enqueue(self, node):
         # add the new node into the queue
-        heapq.heappush(self.queue, (node.priority_probability, node.distance * -1, self.counter, node))
+        heapq.heappush(self.queue, (node.priority_probability * -1, node.distance, self.counter, node))
         self.counter += 1
     
     # removes the fringe node from list

@@ -3,7 +3,7 @@ from random import choices, randint, random
 class Gridworld:
 
     # NOTE: 1 -> blocked, 2 -> flat, 3 -> hilly, 4 -> forest
-    def __init__(self, start, target, dim, prob=0, empty=True):
+    def __init__(self, dim, start=(0,0), target=(0,0), prob=0, empty=True):
 
         # gridworld is an object attribute
         self.gridworld = []
@@ -29,6 +29,11 @@ class Gridworld:
                             row.append(1)
                 # append the row to the gridworld
                 self.gridworld.append(row)
+            # self.gridworld = [[2, 2, 1, 3, 4],
+            #                 [1, 4, 2, 1, 3],
+            #                 [3, 4, 1, 1, 4],
+            #                 [4, 4, 4, 1, 4],
+            #                 [3, 4, 2, 4, 4]]
 
     def print(self):
         for row in self.gridworld:

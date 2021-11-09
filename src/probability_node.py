@@ -10,3 +10,4 @@ class Probability_Node:
         self.target_probability = target_probability
         self.distance = distance
         self.coord = coord
+        self.false_negative_rate = 1
