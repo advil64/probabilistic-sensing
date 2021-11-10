@@ -108,9 +108,9 @@ class Agent_6:
             max_cells.append(self.max_cell)
           max_cells.append(prob_node)
       
-      # Uniform randomly pick a cell
-      if max_cells:
-        self.max_cell = choice(max_cells)
+    # Uniform randomly pick a cell
+    if max_cells:
+      self.max_cell = choice(max_cells)
       
 
     # Heapify the queue so the cell with max probability is next in queue
@@ -154,9 +154,9 @@ class Agent_6:
             max_cells.append(self.max_cell)
           max_cells.append(prob_node)
       
-      # Uniform randomly pick a cell
-      if max_cells:
-        self.max_cell = choice(max_cells)
+    # Uniform randomly pick a cell
+    if max_cells:
+      self.max_cell = choice(max_cells)
 
     # Heapify the queue so the cell with max probability is next in queue
     #heapq.heapify(self.belief_state.queue)
