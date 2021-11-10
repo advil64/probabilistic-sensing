@@ -1,6 +1,7 @@
 import argparse
 from time import sleep, time
 from agent_6 import Agent_6
+from agent_7 import Agent_7
 from gridworld import Gridworld
 from heuristics import manhattan
 from a_star import path_planner
@@ -43,11 +44,13 @@ def solver(dim, prob, complete_grid=None):
     print()
   
   # create agents
-  agents = [Agent_6(dim, start)]
+  agents = [Agent_6(dim, start), Agent_7(dim, start)]
   agent_counter = 5
 
   for agent_object in agents:
     agent_counter += 1
+    agent_start = start
+    agent_guess = guess
     # total number of actions taken
     total_actions = 0
     # total number of cells processed
@@ -63,35 +66,35 @@ def solver(dim, prob, complete_grid=None):
     starting_time = time()
     # start planning a path from the starting block
     new_path, cells_processed = path_planner(
-        start, final_path, guess, agent_object.discovered_grid, dim, manhattan
+        agent_start, final_path, agent_guess, agent_object.discovered_grid, dim, manhattan
     )
     total_cells_processed += cells_processed
     # while A* finds a new path
     while len(new_path) > 0:
         retries += 1
         # execute the path
-        last_node, actions_taken, found_target = agent_object.execute_path(new_path, complete_grid, guess, target)
+        last_node, actions_taken, found_target = agent_object.execute_path(new_path, complete_grid, agent_guess, target)
         total_actions += actions_taken
         final_path = last_node
         # get the last unblocked block
         last_unblock_node = None
         if last_node:
-            start = last_node.curr_block
+            agent_start = last_node.curr_block
             last_unblock_node = last_node.parent_block
         # check if target was found
         if found_target:
             complete_status = True
             break
         # Update guess cell to be next cell with highest probability
-        guess = agent_object.max_cell.coord
+        agent_guess = agent_object.max_cell.coord
 
-        print("New Start: " + str(start) + " New Guess: " + str(guess))
+        #print("New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
 
         # create a new path from the last unblocked node
         new_path, cells_processed = path_planner(
-            start,
+            agent_start,
             last_unblock_node,
-            guess,
+            agent_guess,
             agent_object.discovered_grid,
             dim,
             manhattan,
@@ -100,15 +103,15 @@ def solver(dim, prob, complete_grid=None):
         # If there is no path to the guess, treat it as blocked and keep targeting the next cell with the highest probability
         while not new_path:
           # Treat guess as blocked and update beliefs
-          agent_object.update_belief_block(guess, start)
+          agent_object.update_belief_block(agent_guess, agent_start)
           # Make new guess using the cell with highest probability
-          guess = agent_object.max_cell.coord
+          agent_guess = agent_object.max_cell.coord
           retries += 1
           # Find a path to this new guess cell
           new_path, cells_processed = path_planner(
-            start,
+            agent_start,
             last_unblock_node,
-            guess,
+            agent_guess,
             agent_object.discovered_grid,
             dim,
             manhattan
