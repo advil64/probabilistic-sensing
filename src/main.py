@@ -3,6 +3,7 @@ from time import sleep, time
 from agent_6 import Agent_6
 from agent_7 import Agent_7
 from agent_8 import Agent_8
+from agent_8_ac import Agent_8_ac
 from gridworld import Gridworld
 from heuristics import manhattan
 from a_star import path_planner
@@ -24,10 +25,12 @@ def solver(dim, prob, complete_grid=None):
   agent_6_actions = 0
   agent_7_actions = 0
   agent_8_actions = 0
+  agent_8_ac_actions = 0
   agent_6_list = []
   agent_7_list = []
   agent_8_list = []
-  runs = 10
+  agent_8_ac_list = []
+  runs = 50
   for i in range(runs):
 
     # create a start and end position randomly
@@ -39,7 +42,7 @@ def solver(dim, prob, complete_grid=None):
     # guess = (0,1)
 
     # json output
-    data = {"Agent 6": {}}
+    data = {}
 
     # create a gridworld
     print("Start: " + str(start))
@@ -54,7 +57,8 @@ def solver(dim, prob, complete_grid=None):
     print()
 
     # create agents
-    agents = [Agent_6(dim, start), Agent_7(dim, start), Agent_8(dim, start)]
+    agents = [Agent_6(dim, start), Agent_7(dim, start), Agent_8(dim, start), Agent_8_ac(dim, start)]
+    # agents = [Agent_8_ac(dim, start)]
     agent_counter = 5
 
     for agent_object in agents:
@@ -144,14 +148,20 @@ def solver(dim, prob, complete_grid=None):
       elif agent_counter == 8:
         agent_8_actions += total_actions
         agent_8_list.append(total_actions)
+      elif agent_counter == 9:
+        agent_8_ac_actions += total_actions
+        agent_8_ac_list.append(total_actions)
 
-    print(json.dumps(data))
+    pprint(data)
+  #   print(json.dumps(data))
   print("List of Agent 6 Actions: " + str(agent_6_list))
   print("List of Agent 7 Actions: " + str(agent_7_list))
   print("List of Agent 8 Actions: " + str(agent_8_list))
+  print("List of Agent 8 Advith Actions: " + str(agent_8_ac_list))
   print("Agent 6 Average Actions: " + str(agent_6_actions/runs))
   print("Agent 7 Average Actions: " + str(agent_7_actions/runs))
   print("Agent 8 Average Actions: " + str(agent_8_actions/runs))
+  print("Agent 8 Advith Average Actions: " + str(agent_8_ac_actions/runs))
   print("Took %s seconds" % (time() - pro_start_time))
 
 
@@ -168,7 +178,7 @@ def verify_solvability(dim, start, target, complete_grid):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument(
-      "-d", "--dimension", type=int, default=50, help="dimension of gridworld"
+      "-d", "--dimension", type=int, default=25, help="dimension of gridworld"
     )
     p.add_argument(
       "-p",
