@@ -2,6 +2,7 @@ import argparse
 from time import sleep, time
 from agent_6 import Agent_6
 from agent_7 import Agent_7
+from agent_8 import Agent_8
 from gridworld import Gridworld
 from heuristics import manhattan
 from a_star import path_planner
@@ -19,19 +20,28 @@ from random import choices, randint, random
 """
 def solver(dim, prob, complete_grid=None):
 
-  # create a start and end position randomly
-  start = (randint(0, dim-1), randint(0, dim-1))
-  target = (randint(0, dim-1), randint(0, dim-1))
-  guess = start
-  # start = (4,4)
-  # target = (2,4)
-  # guess = (0,1)
+  pro_start_time = time()
+  agent_6_actions = 0
+  agent_7_actions = 0
+  agent_8_actions = 0
+  agent_6_list = []
+  agent_7_list = []
+  agent_8_list = []
+  runs = 10
+  for i in range(runs):
 
-  # json output
-  data = {"Agent 6": {}}
+    # create a start and end position randomly
+    start = (randint(0, dim-1), randint(0, dim-1))
+    target = (randint(0, dim-1), randint(0, dim-1))
+    guess = start
+    # start = (4,4)
+    # target = (2,4)
+    # guess = (0,1)
 
-  # create a gridworld
-  if not complete_grid:
+    # json output
+    data = {"Agent 6": {}}
+
+    # create a gridworld
     print("Start: " + str(start))
     print("Target: " + str(target))
     print("Guess: " + str(guess))
@@ -42,91 +52,107 @@ def solver(dim, prob, complete_grid=None):
       complete_grid = Gridworld(dim, start, target, prob, False)
     complete_grid.print()
     print()
-  
-  # create agents
-  agents = [Agent_6(dim, start), Agent_7(dim, start)]
-  agent_counter = 5
 
-  for agent_object in agents:
-    agent_counter += 1
-    agent_start = start
-    agent_guess = guess
-    # total number of actions taken
-    total_actions = 0
-    # total number of cells processed
-    total_cells_processed = 0
-    # final path which points to last node
-    final_path = None
-    # number of times A* was repeated
-    retries = 0
-    # status of completion
-    complete_status = False
+    # create agents
+    agents = [Agent_6(dim, start), Agent_7(dim, start), Agent_8(dim, start)]
+    agent_counter = 5
 
-    # perform repeated A* with the agent
-    starting_time = time()
-    # start planning a path from the starting block
-    new_path, cells_processed = path_planner(
-        agent_start, final_path, agent_guess, agent_object.discovered_grid, dim, manhattan
-    )
-    total_cells_processed += cells_processed
-    # while A* finds a new path
-    while len(new_path) > 0:
-        retries += 1
-        # execute the path
-        last_node, actions_taken, found_target = agent_object.execute_path(new_path, complete_grid, agent_guess, target)
-        total_actions += actions_taken
-        final_path = last_node
-        # get the last unblocked block
-        last_unblock_node = None
-        if last_node:
-            agent_start = last_node.curr_block
-            last_unblock_node = last_node.parent_block
-        # check if target was found
-        if found_target:
-            complete_status = True
-            break
-        # Update guess cell to be next cell with highest probability
-        agent_guess = agent_object.max_cell.coord
+    for agent_object in agents:
+      agent_counter += 1
+      agent_start = start
+      agent_guess = guess
+      # total number of actions taken
+      total_actions = 0
+      # total number of cells processed
+      total_cells_processed = 0
+      # final path which points to last node
+      final_path = None
+      # number of times A* was repeated
+      retries = 0
+      # status of completion
+      complete_status = False
 
-        #print("New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
-
-        # create a new path from the last unblocked node
-        new_path, cells_processed = path_planner(
-            agent_start,
-            last_unblock_node,
-            agent_guess,
-            agent_object.discovered_grid,
-            dim,
-            manhattan,
-        )
-        total_cells_processed += cells_processed
-        # If there is no path to the guess, treat it as blocked and keep targeting the next cell with the highest probability
-        while not new_path:
-          # Treat guess as blocked and update beliefs
-          agent_object.update_belief_block(agent_guess, agent_start)
-          # Make new guess using the cell with highest probability
-          agent_guess = agent_object.max_cell.coord
+      # perform repeated A* with the agent
+      starting_time = time()
+      # start planning a path from the starting block
+      new_path, cells_processed = path_planner(
+          agent_start, final_path, agent_guess, agent_object.discovered_grid, dim, manhattan
+      )
+      total_cells_processed += cells_processed
+      # while A* finds a new path
+      while len(new_path) > 0:
           retries += 1
-          # Find a path to this new guess cell
+          # execute the path
+          last_node, actions_taken, found_target = agent_object.execute_path(new_path, complete_grid, agent_guess, target)
+          total_actions += actions_taken
+          final_path = last_node
+          # get the last unblocked block
+          last_unblock_node = None
+          if last_node:
+              agent_start = last_node.curr_block
+              last_unblock_node = last_node.parent_block
+          # check if target was found
+          if found_target:
+              complete_status = True
+              break
+          # Update guess cell to be next cell with highest probability
+          agent_guess = agent_object.max_cell.coord
+
+          print("Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
+
+          # create a new path from the last unblocked node
           new_path, cells_processed = path_planner(
-            agent_start,
-            last_unblock_node,
-            agent_guess,
-            agent_object.discovered_grid,
-            dim,
-            manhattan
+              agent_start,
+              last_unblock_node,
+              agent_guess,
+              agent_object.discovered_grid,
+              dim,
+              manhattan,
           )
           total_cells_processed += cells_processed
-    
-    completion_time = time() - starting_time
-    data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "actions": total_actions, "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
-    
-    # print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
-    # print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
-    # print("Agent %s Took %s actions" % (agent_counter, total_actions))
-    # print("Target found: " + str(target) + " with type " + str(complete_grid.gridworld[target[0]][target[1]]))
+          # If there is no path to the guess, treat it as blocked and keep targeting the next cell with the highest probability
+          while not new_path:
+            # Treat guess as blocked and update beliefs
+            agent_object.update_belief_block(agent_guess, agent_start)
+            # Make new guess using the cell with highest probability
+            agent_guess = agent_object.max_cell.coord
+            retries += 1
+            # Find a path to this new guess cell
+            new_path, cells_processed = path_planner(
+              agent_start,
+              last_unblock_node,
+              agent_guess,
+              agent_object.discovered_grid,
+              dim,
+              manhattan
+            )
+            total_cells_processed += cells_processed
+      
+      completion_time = time() - starting_time
+      data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "actions": total_actions, "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
+      
+      # print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
+      # print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
+      # print("Agent %s Took %s actions" % (agent_counter, total_actions))
+      # print("Target found: " + str(target) + " with type " + str(complete_grid.gridworld[target[0]][target[1]]))
+      if agent_counter == 6:
+        agent_6_actions += total_actions
+        agent_6_list.append(total_actions)
+      elif agent_counter == 7:
+        agent_7_actions += total_actions
+        agent_7_list.append(total_actions)
+      elif agent_counter == 8:
+        agent_8_actions += total_actions
+        agent_8_list.append(total_actions)
 
-  print(json.dumps(data))
+    print(json.dumps(data))
+  print("List of Agent 6 Actions: " + str(agent_6_list))
+  print("List of Agent 7 Actions: " + str(agent_7_list))
+  print("List of Agent 8 Actions: " + str(agent_8_list))
+  print("Agent 6 Average Actions: " + str(agent_6_actions/runs))
+  print("Agent 7 Average Actions: " + str(agent_7_actions/runs))
+  print("Agent 8 Average Actions: " + str(agent_8_actions/runs))
+  print("Took %s seconds" % (time() - pro_start_time))
 
 
 def verify_solvability(dim, start, target, complete_grid):

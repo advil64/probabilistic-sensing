@@ -28,7 +28,7 @@ def path_planner(start, latest_block, target, grid, dim, heuristic):
 
         # Check if the goal node was popped
         if curr.curr_block == target:
-            #print("Path Found, Processed %s cells" % cells_processed)
+            print("Path Found, Processed %s cells" % cells_processed)
             path = []
             # we reached the end trace the path back to start
             x = curr
@@ -42,7 +42,7 @@ def path_planner(start, latest_block, target, grid, dim, heuristic):
         else:
             check_neighbors(grid, dim, heuristic, curr, fringe, visited, target)
 
-    #print("No Path Found")
+    print("No Path Found")
     return ([], cells_processed)
         
             

@@ -17,8 +17,10 @@ class Gridworld:
                 row = []
                 for y in range(dim):
                     # start and target squares are guaranteed empty
-                    if (x, y) == start or (x, y) == target:
+                    if (x, y) == start:
                         # randomly pick type of terrain for square
+                        row.append(self.pickTerrain())
+                    elif (x, y) == target:
                         row.append(self.pickTerrain())
                     else:
                         if random() > 0.3:
