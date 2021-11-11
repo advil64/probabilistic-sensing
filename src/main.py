@@ -96,7 +96,7 @@ def solver(dim, prob, complete_grid=None):
               complete_status = True
               break
           # Update guess cell to be next cell with highest probability
-          agent_guess = agent_object.max_cell.coord
+          agent_guess = agent_object.get_max_cell(agent_start)
 
           print("Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
 
@@ -115,7 +115,7 @@ def solver(dim, prob, complete_grid=None):
             # Treat guess as blocked and update beliefs
             agent_object.update_belief_block(agent_guess, agent_start)
             # Make new guess using the cell with highest probability
-            agent_guess = agent_object.max_cell.coord
+            agent_guess = agent_object.get_max_cell(agent_start)
             retries += 1
             # Find a path to this new guess cell
             new_path, cells_processed = path_planner(

@@ -49,6 +49,10 @@ class Agent_6:
           return path[-1], actions, True
     return path[-1], actions, False
 
+  # Return max cell
+  def get_max_cell(self, curr):
+    return self.max_cell.coord
+
   # Update given cell's false negative rate based off its terrain type
   def update_false_negative_rate(self, coord):
     # Observe the terrain at this cell and update its false negative rate appropriately

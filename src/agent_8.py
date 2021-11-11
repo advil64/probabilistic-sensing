@@ -18,7 +18,7 @@ class Agent_8:
         prob_node = Probability_Node(1/(self.dim**2) * 0.2, 1/(self.dim**2), (i,j))
         self.belief_state.append(prob_node)
         self.cells[(i,j)] = prob_node
-    self.max_cell = self.cells[start]
+    self.max_cell = [self.cells[start]]
 
   def execute_path(self, path, complete_grid, guess, target):
     actions = 0
@@ -43,8 +43,8 @@ class Agent_8:
       # Update probability of this cell after discovering terrain
       self.update_priority_probability(curr)
       
-      # Check if we reached target cell
-      if self.cells[curr].target_probability >= 0.7 * self.cells[guess].target_probability:
+      # Check if we reached target cell or a cell with a close probability
+      if self.cells[curr].priority_probability >= 0.8 * self.cells[guess].priority_probability:
         # Increment number of actions taken because of examination
         actions += 1
         # Examine the cell to search for target
@@ -52,11 +52,20 @@ class Agent_8:
           return path[-1], actions, True
 
       # Check if cell with highest probability changed
-      if self.cells[curr].priority_probability >= self.max_cell.priority_probability:
-        self.max_cell = self.cells[curr]
-        return node, actions, False
+      # if self.cells[curr].priority_probability >= self.max_cell.priority_probability:
+      #   self.max_cell = self.cells[curr]
+      #   return node, actions, False
 
     return path[-1], actions, False
+
+  # Return max cell
+  def get_max_cell(self, curr):
+    if self.max_cell:
+      return self.max_cell.pop().coord
+    self.max_cell = heapq.nlargest(30, self.belief_state, key=lambda e:(e.target_probability, e.priority_probability, manhattan(curr, e.coord) * -1))
+    #self.max_cell.sort(key=lambda e:manhattan(curr, e.coord))
+    self.max_cell.reverse()
+    return self.max_cell.pop().coord
 
   # Update given cell's false negative rate based off its terrain type
   def update_false_negative_rate(self, coord):
@@ -91,7 +100,7 @@ class Agent_8:
     # Probabilty that the blocked cell contained the target
     block_probability = self.cells[block_coord].target_probability
     # Reset max_cell
-    self.max_cell = self.belief_state[0]
+    #self.max_cell = self.belief_state[0]
     # list of max cells to break a tie
     max_cells = []
 
@@ -106,24 +115,24 @@ class Agent_8:
         prob_node.target_probability = 0
         prob_node.priority_probability = 0
       
-      # update max cell if necessary
-      if prob_node.priority_probability > self.max_cell.priority_probability:
-        self.max_cell = prob_node
-        max_cells = []
-      # if probabilities are the same use the distance to break a tie
-      elif prob_node.priority_probability == self.max_cell.priority_probability:
-        if manhattan(last_coord, self.max_cell.coord) > manhattan(last_coord, prob_node.coord):
-          max_cells = []
-          self.max_cell = prob_node
-        # if distances and probabilities are the same use uniform random to break a tie
-        elif manhattan(last_coord, self.max_cell.coord) == manhattan(last_coord, prob_node.coord):
-          if not max_cells:
-            max_cells.append(self.max_cell)
-          max_cells.append(prob_node)
+    #   # update max cell if necessary
+    #   if prob_node.priority_probability > self.max_cell.priority_probability:
+    #     self.max_cell = prob_node
+    #     max_cells = []
+    #   # if probabilities are the same use the distance to break a tie
+    #   elif prob_node.priority_probability == self.max_cell.priority_probability:
+    #     if manhattan(last_coord, self.max_cell.coord) > manhattan(last_coord, prob_node.coord):
+    #       max_cells = []
+    #       self.max_cell = prob_node
+    #     # if distances and probabilities are the same use uniform random to break a tie
+    #     elif manhattan(last_coord, self.max_cell.coord) == manhattan(last_coord, prob_node.coord):
+    #       if not max_cells:
+    #         max_cells.append(self.max_cell)
+    #       max_cells.append(prob_node)
       
-    # Uniform randomly pick a cell
-    if max_cells:
-      self.max_cell = choice(max_cells)
+    # # Uniform randomly pick a cell
+    # if max_cells:
+    #   self.max_cell = choice(max_cells)
       
 
     # Heapify the queue so the cell with max probability is next in queue
@@ -137,7 +146,7 @@ class Agent_8:
     # False negative rate of the examined cell
     examine_false_negative_rate = self.cells[coord].false_negative_rate
     # Reset max_cell
-    self.max_cell = self.belief_state[0]
+    #self.max_cell = self.belief_state[0]
     # used to break ties
     max_cells = []
 
@@ -152,24 +161,24 @@ class Agent_8:
         prob_node.target_probability = (examine_probability * examine_false_negative_rate) / (examine_probability * examine_false_negative_rate + (1 - examine_probability))
         prob_node.priority_probability = prob_node.target_probability * (1 - prob_node.false_negative_rate)
         
-      # update max cell if necessary
-      if prob_node.priority_probability > self.max_cell.priority_probability:
-        self.max_cell = prob_node
-        max_cells = []
-      # if probabilities are the same use the distance to break a tie
-      elif prob_node.priority_probability == self.max_cell.priority_probability:
-        if manhattan(coord, self.max_cell.coord) > manhattan(coord, prob_node.coord):
-          max_cells = []
-          self.max_cell = prob_node
-        # if distances and probabilities are the same use uniform random to break a tie
-        elif manhattan(coord, self.max_cell.coord) == manhattan(coord, prob_node.coord):
-          if not max_cells:
-            max_cells.append(self.max_cell)
-          max_cells.append(prob_node)
+    #   # update max cell if necessary
+    #   if prob_node.priority_probability > self.max_cell.priority_probability:
+    #     self.max_cell = prob_node
+    #     max_cells = []
+    #   # if probabilities are the same use the distance to break a tie
+    #   elif prob_node.priority_probability == self.max_cell.priority_probability:
+    #     if manhattan(coord, self.max_cell.coord) > manhattan(coord, prob_node.coord):
+    #       max_cells = []
+    #       self.max_cell = prob_node
+    #     # if distances and probabilities are the same use uniform random to break a tie
+    #     elif manhattan(coord, self.max_cell.coord) == manhattan(coord, prob_node.coord):
+    #       if not max_cells:
+    #         max_cells.append(self.max_cell)
+    #       max_cells.append(prob_node)
       
-    # Uniform randomly pick a cell
-    if max_cells:
-      self.max_cell = choice(max_cells)
+    # # Uniform randomly pick a cell
+    # if max_cells:
+    #   self.max_cell = choice(max_cells)
 
     # Heapify the queue so the cell with max probability is next in queue
     #heapq.heapify(self.belief_state.queue)
