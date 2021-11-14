@@ -27,7 +27,7 @@ def solver(dim, prob, complete_grid=None):
   agent_6_list = []
   agent_7_list = []
   agent_8_list = []
-  runs = 100
+  runs = 1
   for i in range(runs):
 
     # create a start and end position randomly
@@ -39,16 +39,16 @@ def solver(dim, prob, complete_grid=None):
     data = {}
 
     # create a gridworld
-    print("Start: " + str(start))
-    print("Target: " + str(target))
-    print("Guess: " + str(guess))
+    # print("Start: " + str(start))
+    # print("Target: " + str(target))
+    # print("Guess: " + str(guess))
     # keep generating a new grid until we get a solvable one
     complete_grid = Gridworld(dim, start, target, prob, False)
     while not verify_solvability(dim, start, target, complete_grid):
       # keep generating a new grid until we get a solvable one
       complete_grid = Gridworld(dim, start, target, prob, False)
-    complete_grid.print()
-    print()
+    # complete_grid.print()
+    # print()
 
     # create agents
     agents = [Agent_6(dim, start), Agent_7(dim, start), Agent_8(dim, start)]
@@ -96,7 +96,7 @@ def solver(dim, prob, complete_grid=None):
           # Update guess cell to be next cell with highest probability
           agent_guess = agent_object.get_max_cell(agent_start)
 
-          print("Run: " + str(i) + " Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
+          # print("Run: " + str(i) + " Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
 
           # create a new path from the last unblocked node
           new_path, cells_processed = path_planner(
@@ -143,15 +143,15 @@ def solver(dim, prob, complete_grid=None):
         agent_8_actions += total_actions
         agent_8_list.append(total_actions)
 
-    pprint(data)
-  #   print(json.dumps(data))
-  print("List of Agent 6 Actions: " + str(agent_6_list))
-  print("List of Agent 7 Actions: " + str(agent_7_list))
-  print("List of Agent 8 Actions: " + str(agent_8_list))
-  print("Agent 6 Average Actions: " + str(agent_6_actions/runs))
-  print("Agent 7 Average Actions: " + str(agent_7_actions/runs))
-  print("Agent 8 Average Actions: " + str(agent_8_actions/runs))
-  print("Took %s seconds" % (time() - pro_start_time))
+    # pprint(data)
+  print(json.dumps(data))
+  # print("List of Agent 6 Actions: " + str(agent_6_list))
+  # print("List of Agent 7 Actions: " + str(agent_7_list))
+  # print("List of Agent 8 Actions: " + str(agent_8_list))
+  # print("Agent 6 Average Actions: " + str(agent_6_actions/runs))
+  # print("Agent 7 Average Actions: " + str(agent_7_actions/runs))
+  # print("Agent 8 Average Actions: " + str(agent_8_actions/runs))
+  # print("Took %s seconds" % (time() - pro_start_time))
 
 
 def verify_solvability(dim, start, target, complete_grid):
@@ -167,7 +167,7 @@ def verify_solvability(dim, start, target, complete_grid):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument(
-      "-d", "--dimension", type=int, default=50, help="dimension of gridworld"
+      "-d", "--dimension", type=int, default=25, help="dimension of gridworld"
     )
     p.add_argument(
       "-p",
