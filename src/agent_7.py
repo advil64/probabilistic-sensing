@@ -15,7 +15,7 @@ class Agent_7:
     # Initialize all cell info in belief state
     for i in range(self.dim):
       for j in range(self.dim):
-        prob_node = Probability_Node(1/(self.dim**2) * 0.2, 1/(self.dim**2), (i,j))
+        prob_node = Probability_Node(1/(self.dim**2) * 0.35, 1/(self.dim**2), (i,j))
         self.belief_state.append(prob_node)
         self.cells[(i,j)] = prob_node
     self.max_cell = self.cells[start]

@@ -27,16 +27,13 @@ def solver(dim, prob, complete_grid=None):
   agent_6_list = []
   agent_7_list = []
   agent_8_list = []
-  runs = 50
+  runs = 100
   for i in range(runs):
 
     # create a start and end position randomly
     start = (randint(0, dim-1), randint(0, dim-1))
     target = (randint(0, dim-1), randint(0, dim-1))
     guess = start
-    # start = (4,4)
-    # target = (2,4)
-    # guess = (0,1)
 
     # json output
     data = {}
@@ -99,7 +96,7 @@ def solver(dim, prob, complete_grid=None):
           # Update guess cell to be next cell with highest probability
           agent_guess = agent_object.get_max_cell(agent_start)
 
-          print("Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
+          print("Run: " + str(i) + " Agent: " + str(agent_counter) + " New Start: " + str(agent_start) + " New Guess: " + str(agent_guess))
 
           # create a new path from the last unblocked node
           new_path, cells_processed = path_planner(
@@ -170,7 +167,7 @@ def verify_solvability(dim, start, target, complete_grid):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument(
-      "-d", "--dimension", type=int, default=25, help="dimension of gridworld"
+      "-d", "--dimension", type=int, default=50, help="dimension of gridworld"
     )
     p.add_argument(
       "-p",

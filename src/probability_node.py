@@ -9,4 +9,5 @@ class Probability_Node:
         self.priority_probability = priority_probability
         self.target_probability = target_probability
         self.coord = coord
-        self.false_negative_rate = 0.5
+        self.value = 0
+        self.false_negative_rate = 0.65
