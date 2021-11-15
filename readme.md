@@ -39,3 +39,9 @@ Once it reaches the first guess, it attempts to look for the target. Each square
   - We first normalize the distance value by dividing it by the total dimension of the grid then multiply by a weight of 0.01 to the value before subtracting it from the probability value
 - Next in the event that there is a tie for the highest utility value, we look at the surroundings of all of the tied cells. The tie is broken by whichever cell has highest sum of priority probability in its surrounding cells.
 
+
+**Implement Agent 8, run it sufficiently many times to give a valid comparison to Agents 6 and 7, and verify that Agent 8 is superior.**
+
+
+**How could you improve Agent 8 even further? Be explicit as to what you could do, how, and what you would need.**
+
