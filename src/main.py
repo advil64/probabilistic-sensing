@@ -59,8 +59,9 @@ def solver(dim, prob, complete_grid=None):
       agent_counter += 1
       agent_start = start
       agent_guess = guess
-      # total number of actions taken
-      total_actions = 0
+      # total number of movements and examinations taken
+      total_movements = 0
+      total_examinations = 0
       # total number of cells processed
       total_cells_processed = 0
       # final path which points to last node
@@ -81,8 +82,9 @@ def solver(dim, prob, complete_grid=None):
       while len(new_path) > 0:
           retries += 1
           # execute the path
-          last_node, actions_taken, found_target = agent_object.execute_path(new_path, complete_grid, agent_guess, target)
-          total_actions += actions_taken
+          last_node, movements, examinations, found_target = agent_object.execute_path(new_path, complete_grid, agent_guess, target)
+          total_movements += movements
+          total_examinations += examinations
           final_path = last_node
           # get the last unblocked block
           last_unblock_node = None
@@ -127,21 +129,21 @@ def solver(dim, prob, complete_grid=None):
             total_cells_processed += cells_processed
       
       completion_time = time() - starting_time
-      data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "actions": total_actions, "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
+      data["Agent {}".format(agent_counter)] = {"processed": total_cells_processed, "retries": retries, "time": completion_time, "examinations": total_examinations,"movements": total_movements , "target": target, "terrain": str(complete_grid.gridworld[target[0]][target[1]])}
       
       # print("Agent %s Completed in %s seconds" % (agent_counter, completion_time))
       # print("Agent %s Processed %s cells" % (agent_counter, total_cells_processed))
       # print("Agent %s Took %s actions" % (agent_counter, total_actions))
       # print("Target found: " + str(target) + " with type " + str(complete_grid.gridworld[target[0]][target[1]]))
-      if agent_counter == 6:
-        agent_6_actions += total_actions
-        agent_6_list.append(total_actions)
-      elif agent_counter == 7:
-        agent_7_actions += total_actions
-        agent_7_list.append(total_actions)
-      elif agent_counter == 8:
-        agent_8_actions += total_actions
-        agent_8_list.append(total_actions)
+      # if agent_counter == 6:
+      #   agent_6_actions += total_actions
+      #   agent_6_list.append(total_actions)
+      # elif agent_counter == 7:
+      #   agent_7_actions += total_actions
+      #   agent_7_list.append(total_actions)
+      # elif agent_counter == 8:
+      #   agent_8_actions += total_actions
+      #   agent_8_list.append(total_actions)
 
     # pprint(data)
   print(json.dumps(data))

@@ -21,7 +21,8 @@ class Agent_8:
     self.max_cell = self.cells[start]
 
   def execute_path(self, path, complete_grid, guess, target):
-    actions = 0
+    movements = 0
+    examinations = 0
     for node in path:
       curr = node.curr_block
 
@@ -31,14 +32,14 @@ class Agent_8:
         self.discovered_grid.update_grid_obstacle(curr, 1)
         # update the belief state after learning about this blocked cell
         self.update_belief_block(curr, node.parent_block.curr_block)
-        return node.parent_block, actions, False
+        return node.parent_block, movements, examinations, False
 
       # Update discovered grid with the terrain type
       self.discovered_grid.update_grid_obstacle(curr, complete_grid.gridworld[curr[0]][curr[1]])
       # Update cell's false negative rate after observing its terrain type
       self.update_false_negative_rate(curr)
       # Increment number of actions taken because of movement
-      actions += 1
+      movements += 1
 
       # Update probability of this cell after discovering terrain
       self.update_priority_probability(curr)
@@ -46,17 +47,17 @@ class Agent_8:
       # Check if we reached target cell
       if self.cells[curr].priority_probability >= 0.8 * self.max_cell.priority_probability:
         # Increment number of actions taken because of examination
-        actions += 1
+        examinations += 1
         # Examine the cell to search for target
         if self.examine_cell(curr, target):
-          return path[-1], actions, True
+          return path[-1], movements, examinations, True
 
       # Check if cell with highest probability changed
       if self.cells[curr].priority_probability >= self.max_cell.priority_probability:
         self.max_cell = self.cells[curr]
-        return node, actions, False
+        return node, movements, examinations, False
 
-    return path[-1], actions, False
+    return path[-1], movements, examinations, False
 
   # Return max cell
   def get_max_cell(self, curr):

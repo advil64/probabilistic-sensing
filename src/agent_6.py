@@ -21,7 +21,8 @@ class Agent_6:
     self.max_cell = self.cells[start]
 
   def execute_path(self, path, complete_grid, guess, target):
-    actions = 0
+    movements = 0
+    examinations = 0
     for node in path:
       curr = node.curr_block
 
@@ -31,23 +32,23 @@ class Agent_6:
         self.discovered_grid.update_grid_obstacle(curr, 1)
         # update the belief state after learning about this blocked cell
         self.update_belief_block(curr, node.parent_block.curr_block)
-        return node.parent_block, actions, False
+        return node.parent_block, movements, examinations, False
 
       # Update discovered grid with the terrain type
       self.discovered_grid.update_grid_obstacle(curr, complete_grid.gridworld[curr[0]][curr[1]])
       # Update cell's false negative rate after observing its terrain type
       self.update_false_negative_rate(curr)
       # Increment number of actions taken because of movement
-      actions += 1
+      movements += 1
       
       # Check if we reached target cell
       if curr == guess:
         # Increment number of actions taken because of examination
-        actions += 1
+        examinations += 1
         # Examine the cell to search for target
         if self.examine_cell(curr, target):
-          return path[-1], actions, True
-    return path[-1], actions, False
+          return path[-1], movements, examinations, True
+    return path[-1], movements, examinations, False
 
   # Return max cell
   def get_max_cell(self, curr):
