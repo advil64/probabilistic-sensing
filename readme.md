@@ -22,9 +22,25 @@
 - If $(x,y)$ has never been visited?
 
 
-**Implement Agent 6 and 7. For both agents, repeatedly run each agent on a variety of randomly generated boards (at constant dimension) to estimate the number of actions (movement + examinations) each agent needs on average to  nd the target. You will need to collect enough data to determine which of these agents is superior. Do you notice anything about the movement/examinations distribution for each agent? Note, boards where the target is unreachable from the initial agent position should be discarded.**
+**Implement Agent 6 and 7. For both agents, repeatedly run each agent on a variety of randomly generated boards (at constant dimension) to estimate the number of actions (movement + examinations) each agent needs on average to find the target. You will need to collect enough data to determine which of these agents is superior. Do you notice anything about the movement/examinations distribution for each agent? Note, boards where the target is unreachable from the initial agent position should be discarded.**
 
+First let's look at the results from Agent 6. This was the most naive agent because it does not take into the terrain type of the target when prioritizing it in the queue. Therefore, predictably it has the worst performance as seen by its movements/examinations histogram below. 
 
+![Histogram](./images/question_4_agent_6.png)
+
+Next up we have agent 7 which is a little more informed when it picks out the next target. Instead of just aiming to find the cell most likely to contain the target, it picks out the cell which is most likely to successfully find the target. This means it takes the terrain type into consideration when creating the priority queue.
+
+![Histogram](./images/question_4_agent_7.png)
+
+Lastly, we have agent 8 which is the smartest. This agent uses a *utility* value (described below) which guides the agent to figure out how to prioritize target cells.
+
+![Histogram](./images/question_4_agent_8.png)
+
+To see a more clear side by side comparison of the performance of the agents, let's look at their box plots. These plots tell us that agent 8 performed far better than the other two agents using it's smarter techniques to find the target. There was much lesser movement vs examination due to the fact that agent 8 penalizes targets that are farther away when calculating the priority.
+
+We also see that agent 7 performed better than agent 6. This is likely because by prioritizing cells which are more likely to contain the target, the agent was able to find the target quicker and hence made fewer movements.
+
+![Histogram](./images/question_4_box.png)
 
 **Describe your algorithm, be explicit as to what decisions it is making, how, and why. How does the belief state $(P_{i,j}(t))$ enter into the decision making? Do you need to calculate anything new that you didn't already have available?**
 

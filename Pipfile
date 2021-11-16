@@ -14,6 +14,8 @@ nbformat = "*"
 jupyter = "*"
 ipykernel = "*"
 kaleido = "*"
+scipy = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
