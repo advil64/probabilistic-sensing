@@ -2,4 +2,5 @@
     "editor.autoIndent": "advanced",
     "editor.tabSize": 2,
     "prettier.tabWidth": 2,
+    "cmake.configureOnOpen": false,
 }

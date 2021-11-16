@@ -11,151 +11,166 @@ Given the dimension for the grid D, the probability for each cell is $1/(D^2)$.
 
 - At time t + 1 you attempt to enter $(x,y)$ and find it is blocked?
 
-$P_{i,j}(t + 1)$
+    $P_{i,j}(t + 1)$
 
-= $P(\text{in (i,j) | not (x,y)})$
+    = $P(\text{in (i,j) | not (x,y)})$
 
-= $P(\text{in (i,j) and not (x,y)}) / P(\text{not (x,y)})$
+    = $P(\text{in (i,j) and not (x,y)}) / P(\text{not (x,y)})$
 
-Because the target can only be in one cell, we know $P(in (i,j) and not (x,y))$ is the same as $P(in (i,j))$.
+    Because the target can only be in one cell, we know $P(in (i,j) and not (x,y))$ is the same as $P(in (i,j))$.
 
-= $P(\text{in (i,j)}) / P(\text{not (x,y)})$
+    = $P(\text{in (i,j)}) / P(\text{not (x,y)})$
 
-= $P_{i,j}(t) / (1 - P_{x,y}(t))$
+    = $P_{i,j}(t) / (1 - P_{x,y}(t))$
 
-### Answer: For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (1 - P_{x,y}(t))$
-### For cell (x,y), $P_{x,y}(t + 1)$ = 0
+    **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (1 - P_{x,y}(t))$
+
+    **For cell (x,y), $P_{x,y}(t + 1)$ = 0**
 
 - At time t + 1 you attempt to enter $(x,y)$, find it unblocked, and also learn its terrain type?
 
-$P_{i,j}(t + 1)$
+    $P_{i,j}(t + 1)$
 
-= $P_{i,j}(t)$
+    = $P_{i,j}(t)$
 
-### Answer: $P_{i,j}(t + 1)$ = $P_{i,j}(t)$
+    **Answer:** $P_{i,j}(t + 1)$ = $P_{i,j}(t)$
+
 - At time t + 1 you examine cell $(x,y)$ of terrain type flat, and fail to find the target?
 
-$P(\text{failed at (x,y)})$
+    $P(\text{failed at (x,y)})$
 
-= $P(\text{failed at (x,y) and in (x,y)}) + ∑_{i,j} P(\text{failed at (x,y) and in (i,j)})$
+    = $P(\text{failed at (x,y) and in (x,y)}) + ∑_{i,j} P(\text{failed at (x,y) and in (i,j)})$
 
-= $P(\text{in (x,y)}) * P(\text{failed at (x,y) | in (x,y)}) + ∑_{i,j} P(\text{in (i,j)}) * P(\text{failed at (x,y) | in (i,j)})$
+    = $P(\text{in (x,y)}) * P(\text{failed at (x,y) | in (x,y)}) + ∑_{i,j} P(\text{in (i,j)}) * P(\text{failed at (x,y) | in (i,j)})$
 
-Because the target can only be in one cell, we know $P(failed at (x,y) | in (i,j))$ is $1$.
+    Because the target can only be in one cell, we know $P(failed at (x,y) | in (i,j))$ is $1$.
 
-= $P(\text{in (x,y)}) * 0.2 + ∑_{i,j} P(\text{in (i,j)}) * 1$
+    = $P(\text{in (x,y)}) * 0.2 + ∑_{i,j} P(\text{in (i,j)}) * 1$
 
-= $P(\text{in (x,y)}) * 0.2 + (1 - P(\text{in (x,y)}))$
+    = $P(\text{in (x,y)}) * 0.2 + (1 - P(\text{in (x,y)}))$
 
-= $P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t))$
+    = $P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t))$
 
-New probability for every cell except (x,y).
+    New probability for every cell except (x,y).
 
-$P_{i,j}(t + 1)$
+    $P_{i,j}(t + 1)$
 
-= $P(\text{in (i,j) | failed at (x,y)})$
+    = $P(\text{in (i,j) | failed at (x,y)})$
 
-= $P(\text{in (i,j) and failed at (x,y)}) / P(\text{failed at (x,y)})$
+    = $P(\text{in (i,j) and failed at (x,y)}) / P(\text{failed at (x,y)})$
 
-= $(P(\text{in (i,j)}) * P(\text{failed at (x,y) | in (i,j)})) / P(\text{failed at (x,y)})$
+    = $(P(\text{in (i,j)}) * P(\text{failed at (x,y) | in (i,j)})) / P(\text{failed at (x,y)})$
 
-Because the target can only be in one cell, we know $P(failed at (x,y) | in (i,j))$ is $1$.
+    Because the target can only be in one cell, we know $P(failed at (x,y) | in (i,j))$ is $1$.
 
-= $(P(\text{in (i,j)}) * 1) / P(\text{failed at (x,y)})$
+    = $(P(\text{in (i,j)}) * 1) / P(\text{failed at (x,y)})$
 
-= $P(\text{in (i,j)}) / P(\text{failed at (x,y)})$
+    = $P(\text{in (i,j)}) / P(\text{failed at (x,y)})$
 
-= $P_{i,j}(t) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$
+    = $P_{i,j}(t) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$
 
-New probability for cell (x,y)
+    New probability for cell (x,y)
 
-$P_{x,y}(t + 1)$
+    $P_{x,y}(t + 1)$
 
-= $P(\text{in (x,y) | failed at (x,y)})$
+    = $P(\text{in (x,y) | failed at (x,y)})$
 
-= $P(\text{in (x,y) and failed at (x,y)}) / P(\text{failed at (x,y)})$
+    = $P(\text{in (x,y) and failed at (x,y)}) / P(\text{failed at (x,y)})$
 
-= $(P(\text{in (x,y)}) * P(\text{failed at (x,y) | in (x,y)})) / P(\text{failed at (x,y)})$
+    = $(P(\text{in (x,y)}) * P(\text{failed at (x,y) | in (x,y)})) / P(\text{failed at (x,y)})$
 
-= $(P(\text{in (x,y)}) * 0.2) / P(\text{failed at (x,y)})$
+    = $(P(\text{in (x,y)}) * 0.2) / P(\text{failed at (x,y)})$
 
-= $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$
+    = $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$
 
-### Answer: For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.
-### For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.
+    **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.
+
+    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.**
+
 - At time t + 1 you examine cell $(x,y)$ of terrain type hilly, and fail to find the target?
-### Answer: For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.
-### For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.5) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.
+  
+    **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.
+
+    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.5) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.**
+
 - At time t + 1 you examine cell $(x,y)$ of terrain type forest, and fail to find the target?
-### Answer: For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.
-### For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.8) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.
+  
+    **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.
+
+    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.8) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.**
+
 - At time t + 1 you examine cell $(x,y)$ and find the target?
-### Answer: For every cell except (x,y), $P_{i,j}(t + 1)$ = $0$.
-### For cell (x,y), $P_{x,y}(t + 1)$ = $1$.
+
+    **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $0$.
+
+    **For cell (x,y), $P_{x,y}(t + 1)$ = $1$.**
 
 
 **At time t, with probability $P_{i,j}(t)$ of cell $(i,j)$ containing the target, what is the probability of finding the target in cell $(x,y)$:**
 
 - If $(x,y)$ is hilly?
 
-$P(\text{finding target in (x,y)})$
+    $P(\text{finding target in (x,y)})$
 
-= $P(\text{in (x,y) and finding in a hilly terrain})$ ← These two are independent events
+    = $P(\text{in (x,y) and finding in a hilly terrain})$ ← These two are independent events
 
-= $P(\text{in (x,y)}) * P(\text{finding in hilly terrain})$
+    = $P(\text{in (x,y)}) * P(\text{finding in hilly terrain})$
 
-= $P_{x,y}(t) * (1 - 0.5)$
+    = $P_{x,y}(t) * (1 - 0.5)$
 
-= $P_{x,y}(t) * 0.5$
+    = $P_{x,y}(t) * 0.5$
 
-### Answer: $P_{x,y}(t) * 0.5$
+    **Answer:** $P_{x,y}(t) * 0.5$
+
 - If $(x,y)$ is flat?
 
-$P(\text{finding target in (x,y)})$
+    $P(\text{finding target in (x,y)})$
 
-= $P(\text{in (x,y) and finding in a flat terrain})$ ← These two are independent events
+    = $P(\text{in (x,y) and finding in a flat terrain})$ ← These two are independent events
 
-= $P(\text{in (x,y)}) * P(\text{finding in flat terrain})$
+    = $P(\text{in (x,y)}) * P(\text{finding in flat terrain})$
 
-= $P_{x,y}(t) * (1 - 0.2)$
+    = $P_{x,y}(t) * (1 - 0.2)$
 
-= $P_{x,y}(t) * 0.8$
+    = $P_{x,y}(t) * 0.8$
 
-### Answer: $P_{x,y}(t) * 0.8$
+    **Answer:** $P_{x,y}(t) * 0.8$
+
 - If $(x,y)$ is forest?
 
-$P(\text{finding target in (x,y)})$
+    $P(\text{finding target in (x,y)})$
 
-= $P(\text{in (x,y) and finding in a forest terrain})$ ← These two are independent events
+    = $P(\text{in (x,y) and finding in a forest terrain})$ ← These two are independent events
 
-= $P(\text{in (x,y)}) * P(\text{finding in forest terrain})$
+    = $P(\text{in (x,y)}) * P(\text{finding in forest terrain})$
 
-= $P_{x,y}(t) * (1 - 0.8)$
+    = $P_{x,y}(t) * (1 - 0.8)$
 
-= $P_{x,y}(t) * 0.2$
+    = $P_{x,y}(t) * 0.2$
 
-### Answer: $P_{x,y}(t) * 0.2$
+    **Answer:** $P_{x,y}(t) * 0.2$
+
 - If $(x,y)$ has never been visited?
 
-$P(\text{finding target in (x,y)})$
+    $P(\text{finding target in (x,y)})$
 
-= $P(\text{in (x,y) and finding in an unknown terrain})$ ← These two are independent events
+    = $P(\text{in (x,y) and finding in an unknown terrain})$ ← These two are independent events
 
-= $P(\text{in (x,y)}) * P(\text{finding in unknown terrain})$
+    = $P(\text{in (x,y)}) * P(\text{finding in unknown terrain})$
 
-= $P(\text{in (x,y)}) * (P(\text{finding in terrain and terrain is blocked}) + P(\text{finding in terrain and terrain is flat}) + P(\text{finding in terrain and terrain is hilly}) + P(\text{finding in terrain and terrain is forest}))$
+    = $P(\text{in (x,y)}) * (P(\text{finding in terrain and terrain is blocked}) + P(\text{finding in terrain and terrain is flat}) + P(\text{finding in terrain and terrain is hilly}) + P(\text{finding in terrain and terrain is forest}))$
 
-= $P(\text{in (x,y)}) * (P(\text{terrain is blocked})*P(\text{finding in terrain | terrain is blocked}) + P(\text{terrain is flat})*P(\text{finding in terrain | terrain is flat}) + P(\text{terrain is hilly})*P(\text{finding in terrain | terrain is hilly}) + P(\text{terrain is forest})*P(\text{finding in terrain | terrain is forest}))$
+    = $P(\text{in (x,y)}) * (P(\text{terrain is blocked})*P(\text{finding in terrain | terrain is blocked}) + P(\text{terrain is flat})*P(\text{finding in terrain | terrain is flat}) + P(\text{terrain is hilly})*P(\text{finding in terrain | terrain is hilly}) + P(\text{terrain is forest})*P(\text{finding in terrain | terrain is forest}))$
 
-= $P(\text{in (x,y)}) * ((0.3) * (1-1) + (0.7) * ((1⁄3) * (1-0.2) + (1⁄3) * (1-0.5) + (1⁄3) * (1-0.8)))$
+    = $P(\text{in (x,y)}) * ((0.3) * (1-1) + (0.7) * ((1⁄3) * (1-0.2) + (1⁄3) * (1-0.5) + (1⁄3) * (1-0.8)))$
 
-= $P(\text{in (x,y)}) * (0.7) * ((1⁄3) * 1.5)$
+    = $P(\text{in (x,y)}) * (0.7) * ((1⁄3) * 1.5)$
 
-= $P(\text{in (x,y)}) * (0.7) * 0.5$
+    = $P(\text{in (x,y)}) * (0.7) * 0.5$
 
-= $P_{x,y}(t)*0.35 $
+    = $P_{x,y}(t)*0.35$
 
-### Answer: $P_{x,y}(t) * 0.35$
+    **Answer:** $P_{x,y}(t) * 0.35$
 
 
 **Implement Agent 6 and 7. For both agents, repeatedly run each agent on a variety of randomly generated boards (at constant dimension) to estimate the number of actions (movement + examinations) each agent needs on average to find the target. You will need to collect enough data to determine which of these agents is superior. Do you notice anything about the movement/examinations distribution for each agent? Note, boards where the target is unreachable from the initial agent position should be discarded.**
