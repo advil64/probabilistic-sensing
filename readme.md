@@ -220,3 +220,7 @@ We don't need to calculate anything new that isn't already availaible to us as w
 
 **How could you improve Agent 8 even further? Be explicit as to what you could do, how, and what you would need.**
 
+One way we could improve Agent 8 further is by adjusting the way we plan our paths. Rather than planning a path towards one cell with the highest utility value, we could have our planning phase plan an optimized path to visit the 5 cells with the highest utility value. By planning a path to one cell at a time, we may not be able to visit the top 5 cells with the highest utility value in the most optimized path. For example, traversing to the second highest utility value cell then to the first may require less movements than traversing to the highest utility value cell then to the second.
+
+To do this, we would first need to keep track of the five cells with the highest utility values. This could be done by keeping a list that keeps track of these top five values as we update probabilities. We would then use our A* planning method to try out the different orderings of these five cells to see which sequences of paths sums up to the shortest among those orderings. We can then traverse the shortest path among the different orderings of these top 5 cells. This should lower the number of movements we make with the agent while also examining the top cells which may likely contain the target.
+
