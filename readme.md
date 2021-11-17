@@ -25,7 +25,7 @@ Given the dimension for the grid D, the probability for each cell is $1/(D^2)$.
 
     **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (1 - P_{x,y}(t))$
 
-    **For cell (x,y), $P_{x,y}(t + 1)$ = 0**
+    For cell (x,y), $P_{x,y}(t + 1)$ = 0
 
 - At time t + 1 you attempt to enter $(x,y)$, find it unblocked, and also learn its terrain type?
 
@@ -85,25 +85,25 @@ Given the dimension for the grid D, the probability for each cell is $1/(D^2)$.
 
     **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.
 
-    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.**
+    For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.2) / (P_{x,y}(t) * 0.2 + (1 - P_{x,y}(t)))$.
 
 - At time t + 1 you examine cell $(x,y)$ of terrain type hilly, and fail to find the target?
   
     **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.
 
-    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.5) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.**
+    For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.5) / (P_{x,y}(t) * 0.5 + (1 - P_{x,y}(t)))$.
 
 - At time t + 1 you examine cell $(x,y)$ of terrain type forest, and fail to find the target?
   
     **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $P_{i,j}(t) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.
 
-    **For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.8) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.**
+    For cell (x,y), $P_{x,y}(t + 1)$ = $(P_{x,y}(t) * 0.8) / (P_{x,y}(t) * 0.8 + (1 - P_{x,y}(t)))$.
 
 - At time t + 1 you examine cell $(x,y)$ and find the target?
 
     **Answer:** For every cell except (x,y), $P_{i,j}(t + 1)$ = $0$.
 
-    **For cell (x,y), $P_{x,y}(t + 1)$ = $1$.**
+    For cell (x,y), $P_{x,y}(t + 1)$ = $1$.
 
 
 **At time t, with probability $P_{i,j}(t)$ of cell $(i,j)$ containing the target, what is the probability of finding the target in cell $(x,y)$:**
@@ -183,7 +183,7 @@ As shown in the table above, we can see that Agent 7 is superior over Agent 6 as
 
 ![Histogram](./images/bar_chart_actions_terrain.png)
 
-As shown in the bar graph above, Agent 7 seems to consistently beat Agent 6 among the various terrain types as well. Although it does struggle more when the target is in a forest, the way the agent prioritizes finding the cell allowed it to still beat Agent 6 on average.
+As shown in the bar graph above, both Agents seem to take more actions as the false negative rate increases which makes sense as higher false negative rates increases the chances of failing an examination which increases the number of actions needed to reexamine the cell later. Agent 7 seems to still consistently beat Agent 6 among the various terrain types as well. Although Agent 7 does struggle more when the target is in a forest, the way the agent prioritizes finding the cell allowed it to still beat Agent 6 on average for every terrain.
 
 ![Histogram](./images/question_4_agent_6.png)
 
@@ -230,7 +230,7 @@ This is because Agent 8 fixes some of the weaknesses found in Agents 6 and 7.
 
 The weakness Agents 6 and 7 suffers from is that they ignore close cells that also have reasonably high probabilities. By doing this, these Agents will end up having to travel back and forth to examine cells which increases number of movements. Agent 8 fixes this using the various strategies described earlier. By considering closer cells with reasonably high probabilities using utlity values, Agent 8 was able to cut down on the number of movements by finding the target earlier.
 
-We also observe that the movement/examination ratio is smaller for 8. This makes sense as we sacrifice a lot of movement for more examinations in our strategies. By taking the chance to examine closer cells with reasonably high probabilities, we increase the number of examinations, but significantly decrease the number of movements. This allows for a smaller ratio in Agent 8 compared to Agents 6 and 7.
+We also observe that the movement/examination ratio is smaller for Agent 8. This makes sense as we sacrifice a lot of movement for more examinations in our strategies. By taking the chance to examine closer cells with reasonably high probabilities, we increase the number of examinations, but significantly decrease the number of movements. This allows for a smaller ratio in Agent 8 compared to Agents 6 and 7.
 
 ![Histogram](./images/question_4_agent_8.png)
 
