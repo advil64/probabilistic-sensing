@@ -175,23 +175,25 @@ Given the dimension for the grid D, the probability for each cell is $1/(D^2)$.
 
 **Implement Agent 6 and 7. For both agents, repeatedly run each agent on a variety of randomly generated boards (at constant dimension) to estimate the number of actions (movement + examinations) each agent needs on average to find the target. You will need to collect enough data to determine which of these agents is superior. Do you notice anything about the movement/examinations distribution for each agent? Note, boards where the target is unreachable from the initial agent position should be discarded.**
 
-First let's look at the results from Agent 6. This was the most naive agent because it does not take into the terrain type of the target when prioritizing it in the queue. Therefore, predictably it has the worst performance as seen by its movements/examinations histogram below. 
+The following tables and graphs are based off the data collected by running each agent on 100 different 50x50 gridworlds.
+
+![Histogram](./images/agent_average_table.png)
+
+As shown in the table above, we can see that Agent 7 is superior over Agent 6 as Agent 7 performs less actions on average than Agent 6. This is likely because Agent 7 takes the terrain type and their false negative rates into consideration when deciding which cell to examine next. As a result, Agent 7 will prioritize cells where it'll likely find the target over cells that just may contain the target.
+
+![Histogram](./images/bar_chart_actions_terrain.png)
+
+As shown in the bar graph above, Agent 7 seems to consistently beat Agent 6 among the various terrain types as well. Although it does struggle more when the target is in a forest, the way the agent prioritizes finding the cell allowed it to still beat Agent 6 on average.
 
 ![Histogram](./images/question_4_agent_6.png)
 
-Next up we have agent 7 which is a little more informed when it picks out the next target. Instead of just aiming to find the cell most likely to contain the target, it picks out the cell which is most likely to successfully find the target. This means it takes the terrain type into consideration when creating the priority queue.
-
 ![Histogram](./images/question_4_agent_7.png)
 
-Lastly, we have agent 8 which is the smartest. This agent uses a *utility* value (described below) which guides the agent to figure out how to prioritize target cells.
-
-![Histogram](./images/question_4_agent_8.png)
-
-To see a more clear side by side comparison of the performance of the agents, let's look at their box plots. These plots tell us that agent 8 performed far better than the other two agents using it's smarter techniques to find the target. There was much lesser movement vs examination due to the fact that agent 8 penalizes targets that are farther away when calculating the priority.
-
-We also see that agent 7 performed better than agent 6. This is likely because by prioritizing cells which are more likely to contain the target, the agent was able to find the target quicker and hence made fewer movements.
+From the graphs above and the table in the beginning of this question, we see that the movement/examination ratios for Agent 7 were typically more smaller than the movement/examination ratios of Agent 6 (on average, Agent 7 had a ratio of 4.48, compared to Agent 6 with an average ratio of 5.64). This may likely be due to Agent 7 being able to stop and replan after learning the false negative rate of its current cell which could've changed the cell with the highest probability of finding the target. As a result, we end up with less movements and more examinations compared to Agent 6. The box plot below also shows that the spread of the ratios for 7 is generally less than the spread for Agent 6.
 
 ![Histogram](./images/question_4_box.png)
+
+Overall, we can observe from this data that Agent 7 is superior over Agent 6.
 
 **Describe your algorithm, be explicit as to what decisions it is making, how, and why. How does the belief state $(P_{i,j}(t))$ enter into the decision making? Do you need to calculate anything new that you didn't already have available?**
 
@@ -217,14 +219,22 @@ We don't need to calculate anything new that isn't already availaible to us as w
 
 **Implement Agent 8, run it sufficiently many times to give a valid comparison to Agents 6 and 7, and verify that Agent 8 is superior.**
 
+![Histogram](./images/agent_average_table.png)
+
+![Histogram](./images/bar_chart_actions_terrain.png)
+
 From the graphs, we can observe that as the false negative rates of the terrains increases, the amount of actions taken by Agent 8 also increases. This makes sense as a higher false negative rate means the chance of failing an examination at the target cell increases, which leads to more actions needed to eventually reexamine the target cell.
 
-However, we also observe the Agent 8 is still able to outperform both Agents 6 and 7 as Agent 8 took fewer actions to find the target. We see this trend among all the terains.
+However, we also observe the Agent 8 is still able to outperform both Agents 6 and 7 as Agent 8 took fewer actions to find the target. We see this trend among all the terrain types for the target.
 This is because Agent 8 fixes some of the weaknesses found in Agents 6 and 7.
 
 The weakness Agents 6 and 7 suffers from is that they ignore close cells that also have reasonably high probabilities. By doing this, these Agents will end up having to travel back and forth to examine cells which increases number of movements. Agent 8 fixes this using the various strategies described earlier. By considering closer cells with reasonably high probabilities using utlity values, Agent 8 was able to cut down on the number of movements by finding the target earlier.
 
-We also observe that the movement to examination ratio is smaller for 8. This makes sense as we sacrifice a lot of movement for more examinations in our strategies. By taking the chance to examine closer cells with reasonably high probabilities, we increase the number of examinations, but significantly decrease the number of movements. This allows for a smaller ratio in Agent 8 compared to Agents 6 and 7.
+We also observe that the movement/examination ratio is smaller for 8. This makes sense as we sacrifice a lot of movement for more examinations in our strategies. By taking the chance to examine closer cells with reasonably high probabilities, we increase the number of examinations, but significantly decrease the number of movements. This allows for a smaller ratio in Agent 8 compared to Agents 6 and 7.
+
+![Histogram](./images/question_4_agent_8.png)
+
+The above graph also shows that the distribution of the ratios for Agent 8 is also more compact and less spread apart compared to Agents 6 and 7.
 
 Overall, our data supports that Agent 8 is superior to Agents 6 and 7.
 
