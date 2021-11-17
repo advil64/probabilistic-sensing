@@ -16,6 +16,7 @@ ipykernel = "*"
 kaleido = "*"
 scipy = "*"
 numpy = "*"
+grip = "*"
 
 [requires]
 python_version = "3.7"
