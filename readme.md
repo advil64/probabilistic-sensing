@@ -217,6 +217,17 @@ We don't need to calculate anything new that isn't already availaible to us as w
 
 **Implement Agent 8, run it sufficiently many times to give a valid comparison to Agents 6 and 7, and verify that Agent 8 is superior.**
 
+From the graphs, we can observe that as the false negative rates of the terrains increases, the amount of actions taken by Agent 8 also increases. This makes sense as a higher false negative rate means the chance of failing an examination at the target cell increases, which leads to more actions needed to eventually reexamine the target cell.
+
+However, we also observe the Agent 8 is still able to outperform both Agents 6 and 7 as Agent 8 took fewer actions to find the target. We see this trend among all the terains.
+This is because Agent 8 fixes some of the weaknesses found in Agents 6 and 7.
+
+The weakness Agents 6 and 7 suffers from is that they ignore close cells that also have reasonably high probabilities. By doing this, these Agents will end up having to travel back and forth to examine cells which increases number of movements. Agent 8 fixes this using the various strategies described earlier. By considering closer cells with reasonably high probabilities using utlity values, Agent 8 was able to cut down on the number of movements by finding the target earlier.
+
+We also observe that the movement to examination ratio is smaller for 8. This makes sense as we sacrifice a lot of movement for more examinations in our strategies. By taking the chance to examine closer cells with reasonably high probabilities, we increase the number of examinations, but significantly decrease the number of movements. This allows for a smaller ratio in Agent 8 compared to Agents 6 and 7.
+
+Overall, our data supports that Agent 8 is superior to Agents 6 and 7.
+
 
 **How could you improve Agent 8 even further? Be explicit as to what you could do, how, and what you would need.**
 
